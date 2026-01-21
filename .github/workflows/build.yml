@@ -1,0 +1,64 @@
+name: Build u-boot
+permissions:
+  contents: write
+on:
+  workflow_call:
+    inputs:
+      device:
+        type: string
+        required: true
+      repo:
+        type: string
+        required: true
+      ref:
+        type: string
+        required: true
+      config:
+        type: string
+        required: true
+      device_tree:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      device:
+        type: string
+        required: true
+      repo:
+        type: string
+        required: true
+      commit:
+        type: string
+        required: true
+      config:
+        type: string
+        required: true
+      device_tree:
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout u-boot repo
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.ref }}
+
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+        with:
+          path: builder
+
+      - name: Build u-boot
+        run: |
+          cd builder
+          ./build_container.sh "${{ inputs.config }}" "${{ inputs.device_tree }}"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: u-boot-${{ inputs.device }}
+          path: ./builder/output
