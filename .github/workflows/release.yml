@@ -14,11 +14,16 @@ jobs:
     strategy:
       matrix:
         target:
-          - device: xiaomi-beryllium
+          - device: xiaomi-beryllium-ebbg
             repo: https://git.codelinaro.org/clo/qcomlt/u-boot.git
             ref: 6fc40f2499b1a517487933d7d81a482f6dce7751
             config: "qcom_defconfig phone.config"
             device_tree: "qcom/sdm845-xiaomi-beryllium-ebbg"
+          - device: xiaomi-beryllium-tianma
+            repo: https://git.codelinaro.org/clo/qcomlt/u-boot.git
+            ref: 6fc40f2499b1a517487933d7d81a482f6dce7751
+            config: "qcom_defconfig phone.config"
+            device_tree: "qcom/sdm845-xiaomi-beryllium-tianma"
     uses: ./.github/workflows/build.yml
     with:
       device: ${{ matrix.target.device }}
